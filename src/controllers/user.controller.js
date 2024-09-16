@@ -15,19 +15,19 @@ const registerUser = asyncHandler(async(req,res)=>{
     // check for user creation 
     //return response
 
-    const{fullname,email,username,password}=req.body
+    const{fullName,email,username,password}=req.body
     
-    // if (fullname===""){
+    // if (fullName===""){
     //     throw new ApiError(400,"Full Name is required")
     // }
 
     if (
-        [fullname,email,username,password].some((data)=>data?.trim()==="")
+        [fullName,email,username,password].some((data)=>data?.trim()==="")
     ){
         throw new ApiError(400,"Field can't be empty")
     }
 
-    const existedUser=User.find({$or:[{username},  {email}]})
+    const existedUser=await User.findOne({$or:[{username},  {email}]})
 
     if(existedUser){
         throw new ApiError (409,"User already existed ")
@@ -48,7 +48,7 @@ const registerUser = asyncHandler(async(req,res)=>{
         throw new ApiError(400,"Avatar file is required")
     }
     const user = await User.create({
-        fullname,
+        fullName,
         avatar:avatar.url,
         coverImage:coverImage?.url ||"",
         email,
@@ -70,3 +70,4 @@ const registerUser = asyncHandler(async(req,res)=>{
 })
 
 export {registerUser}
+
